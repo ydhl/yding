@@ -16,7 +16,7 @@ try{
 		YDingHook::do_hook(YDingHook::REFRESH_ACCESS_TOKEN, $access_token);
 	}
 	
-	$jsapi_ticket = yding_get_js_ticket($access_token);
+	$jsapi_ticket = yding_get_jsapi_ticket($access_token);
 	YDingHook::do_hook(YDingHook::REFRESH_JS_API_TICKET, $jsapi_ticket);
 }catch (YDing_Exception $e){
 	YDingHook::do_hook(YDingHook::EXCEPTION, $e);

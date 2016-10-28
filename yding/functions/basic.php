@@ -10,7 +10,7 @@
  */
 function yding_get_access_token() {
 	$http = new YDingHttp ();
-	$response = $http->get ( YDing_OAPI_HOST . '/gettoken', array (
+	$response = $http->get ( YDing_OAPI_HOST . 'gettoken', array (
 			'corpid' => YDing_CORPID,
 			'corpsecret' => YDing_SECRET 
 	) );
@@ -31,7 +31,7 @@ function yding_get_access_token() {
  */
 function yding_get_sso_token() {
 	$http = new YDingHttp ();
-	$response = $http->get ( YDing_OAPI_HOST . '/sso/gettoken', array (
+	$response = $http->get ( YDing_OAPI_HOST . 'sso/gettoken', array (
 			'corpid' => YDing_ISV_CORPID,
 			'corpsecret' => YDing_SSOSecret
 	) );
@@ -70,4 +70,48 @@ function yding_curr_page_url() {
 function yding_sign($ticket, $nonceStr, $timeStamp, $url) {
 	$plain = 'jsapi_ticket=' . $ticket . '&noncestr=' . $nonceStr . '&timestamp=' . $timeStamp . '&url=' . $url;
 	return sha1 ( $plain );
+}
+
+/**
+ * 企业自建(也就是企业自己开发的)服务窗应用时获取服务窗ChannelToken.
+ * 
+ * 这里的channel token也是一种access token，过期时间7200，需要通过ydtimer.yidianhulian.com或者其他定时访问channel_token.php来定时刷新
+ * 
+ * @throws YDing_Exception
+ * @return string channelToken
+ */
+function yding_get_channel_token(){
+	$http = new YDingHttp ();
+	$response = $http->get ( YDing_OAPI_HOST . 'channel/get_channel_token', array (
+			'corpid' => YDing_CORPID,
+			'channel_secret' => YDing_ChannelSecret
+	) );
+	$response = json_decode ( $response );
+	if ($response->access_token)
+		return $response->access_token;
+		
+	throw new YDing_Exception ( $response->errmsg, $response->errcode );
+}
+
+/**
+ * ISV获取企业服务窗接口调用channel TOKEN
+ *
+ * 这里的channel token也是一种access token，过期时间7200，需要通过ydtimer.yidianhulian.com或者其他定时访问channel_isv_token.php来定时刷新
+ * @param $auth_corpid 授权方corpid
+ * @param $ch_permanent_code 企业服务窗永久授权码
+ * @throws YDing_Exception
+ * @return string channelToken
+ */
+function yding_get_channel_isv_token($auth_corpid, $ch_permanent_code){
+	$http = new YDingHttp ();
+	$response = $http->post ( YDing_OAPI_HOST . 'service/get_channel_corp_token?suite_access_token='.YDing_SUITE_ACCESS_TOKEN, array (
+			'auth_corpid' 		=> $auth_corpid,
+			'ch_permanent_code'	=> $ch_permanent_code
+	) );
+	
+	$response = json_decode ( $response );
+	if ($response->access_token)
+		return $response->access_token;
+
+	throw new YDing_Exception ( $response->errmsg, $response->errcode );
 }

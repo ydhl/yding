@@ -91,3 +91,19 @@ function yding_crop_sendmsg($accessToken, YDing_Crop_Sendmsg_Request $request) {
 	if ($obj->isSuccess()) return $obj;
 	throw new YDing_Exception($obj->errmsg, $obj->errcode);
 }
+
+/**
+ * 发送服务窗消息。此接口为异步调用，获取发送进度和错误列表请使用返回的taskid来进行查询
+ * 
+ * @param unknown $accessToken
+ * @param YDing_Crop_Sendmsg_Request $request
+ * @throws YDing_Exception
+ * @return YDing_Channel_Sendmsg_Response
+ */
+function yding_channel_sendmsg($accessToken, YDing_Channel_Sendmsg_Request $request){
+	$http = new YDingHttp();
+	$response = $http->post( YDing_OAPI_HOST."channel/message/send?access_token={$accessToken}", $request->toJSONString() );
+	$obj = new YDing_Channel_Sendmsg_Response($response);
+	if ($obj->isSuccess()) return $obj;
+	throw new YDing_Exception($obj->errmsg, $obj->errcode);
+}

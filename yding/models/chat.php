@@ -240,8 +240,10 @@ class YDing_Sendmsg_OA_Request extends YDing_Sendmsg_Base{
 		$args["oa"]["body"]["image"] = $this->body_image;
 		$args["oa"]["body"]["file_count"] = $this->body_file_count;
 		$args["oa"]["body"]["author"] = $this->body_author;
-		$args["oa"]["body"]["rich"]["num"] = $this->body_rich_num;
-		$args["oa"]["body"]["rich"]["unit"] = $this->body_rich_unit;
+		if ($this->body_rich_num){
+			$args["oa"]["body"]["rich"]["num"] = $this->body_rich_num;
+			$args["oa"]["body"]["rich"]["unit"] = $this->body_rich_unit;
+		}
 		foreach ($this->body_form_keys as $index => $key){
 			$args["oa"]["body"]["form"][] = array(
 					"key" => $key, 
@@ -294,6 +296,72 @@ class YDing_Chat_Sendmsg_Request extends YDingRequest{
 		return $args;
 	}
 }
+/**
+ * 服务窗消息
+ * @author ydhlleeboo
+ *
+ */
+class YDing_Channel_Sendmsg_Request extends YDingRequest{
+	/**
+	 * 由接收人的openid组成的字符串
+	 * @var array
+	 */
+	public $touser;
+	/**
+	 * 服务窗应用的代理id
+	 * @var string
+	 */
+	public $channelAgentId;
+	
+	/**
+	 * 消息题
+	 * @var YDing_Sendmsg_Base
+	 */
+	public $msg;
+	
+	public function valid(){
+	
+	}
+	public function sortArg(){
+		$args = $this->formatArgs();
+		return $args;
+	}
+	protected function formatArgs(){
+		$args = parent::formatArgs();
+		unset($args["msg"]);
+	
+		if ($this->touser)  $args["touser"]  = join("|", (array)$this->touser);
+	
+		$args = array_merge($args, $this->msg->toArray());
+	
+		//消息头必须按照消息头和消息体的格式
+		//https://open-doc.dingtalk.com/docs/doc.htm?spm=a219a.7629140.0.0.aTVcCa&treeId=255&articleId=105566&docType=1
+		//touser toparty agentid msgtype
+		return $args;
+	}
+}
+/**
+ * 服务窗消息响应
+ * @author ydhlleeboo
+ *
+ */
+class YDing_Channel_Sendmsg_Response extends YDingResponse{
+	/**
+	 * 	无效的userid
+	 * @var array
+	 */
+	public $invaliduser;
+	/**
+	 * 标发送消息的任务id
+	 */
+	public $taskid;
+
+	public function build($msg){
+		parent::build($msg);
+		$this->invaliduser = explode("|", $this->invaliduser);
+	}
+}
+
 /**
  * 发送企业消息请求
  * @author ydhlleeboo

@@ -29,13 +29,50 @@ final class YDingHook {
      * @var string
      */
     const GET_ACCESS_TOKEN = "get_access_token";
-    
     /**
-     * 刷新获取微应用后台管理免登SsoToken，参数是得到的sso token
+     * 刷新企业自建服务窗应用的channel token，参数是得到的channel token；请宿主系统把该值存在本地数据库中；
+     * 以便其他地方直接使用，其他地方将通过GET_CHANNEL_TOKEN直接取本地存储的值
      * @var string
      */
-    const REFRESH_SSO_TOKEN 	= "sso_token";
+    const REFRESH_CHANNEL_TOKEN = "refresh_channel_token";
+    /**
+     * 从宿主系统中获取企业自建服务窗应用的channel token；无hook 参数；
+     * 通常情况下，宿主系统应该吧REFRESH_CHANNEL_TOKEN得到的channel token存下来，并通过channel_token.php
+     * 定时刷新（access token有效期为7200）；然后该hook是直接取得本地存的值；
+     * 如果该hook无内容返回，可通过yding_get_channel_token()再次请求
+     * @var string
+     */
+    const GET_CHANNEL_TOKEN = "get_channel_token";
     
+    
+    /**
+     * 刷新ISV服务窗应用的channel token，参数是得到的channel token；请宿主系统把该值存在本地数据库中；
+     * 以便其他地方直接使用，其他地方将通过GET_CHANNEL_ISV_TOKEN直接取本地存储的值
+     * @var string
+     */
+    const REFRESH_CHANNEL_ISV_TOKEN = "refresh_channel_isv_token";
+    /**
+     * 从宿主系统中获取ISV服务窗应用的channel token；无hook 参数；
+     * 通常情况下，宿主系统应该吧REFRESH_CHANNEL_ISV_TOKEN得到的channel token存下来，并通过channel_isv_token.php
+     * 定时刷新（access token有效期为7200）；然后该hook是直接取得本地存的值；
+     * 如果该hook无内容返回，可通过yding_get_channel_isv_token()再次请求
+     * @var string
+     */
+    const GET_CHANNEL_ISV_TOKEN = "get_channel_isv_token";
+    /**
+     * 刷新isv服务窗的jsapi ticket，参数是得到的ticket。请宿主系统把该值存在本地数据库中；
+     * 以便其他地方直接使用，其他地方将通过GET_CHANNEL_JS_API_TICKET直接取本地存储的值
+     * @var string
+     */
+    const REFRESH_CHANNEL_JS_API_TICKET 	= "refresh_channel_js_api_ticket";
+    /**
+     * 从宿主系统中获取isv企业服务窗的jsapi_ticket；无hook 参数；
+     * 通常情况下，宿主系统应该吧REFRESH_CHANNEL_JS_API_TICKET得到的ticket存下来，并通过channel_jsapi_ticket.php
+     * 定时刷新（有效期为7200）；然后该hook是直接取得本地存的值；
+     * 如果该hook无内容返回，可通过yding_get_channel_jsapi_ticket()再次请求
+     * @var string
+     */
+    const GET_CHANNEL_JS_API_TICKET 	= "get_channel_js_api_ticket";
     /**
      * 刷新jsapi ticket，参数是得到的ticket。请宿主系统把该值存在本地数据库中；
 	 * 以便其他地方直接使用，其他地方将通过GET_JS_API_TICKET直接取本地存储的值
@@ -50,6 +87,12 @@ final class YDingHook {
      * @var string
      */
     const GET_JS_API_TICKET 	= "get_jsapi_ticket";
+
+    /**
+     * 刷新获取微应用后台管理免登SsoToken，参数是得到的sso token
+     * @var string
+     */
+    const REFRESH_SSO_TOKEN 	= "sso_token";
     
     /**
      * 免登成功回调，参数是YDing_Base_User_Response
