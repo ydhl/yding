@@ -21,14 +21,21 @@ define("YDing_SITE_URL",             "");
 
 //企业微应用配置
 define("YDing_CORPID", "");
-define("YDing_SECRET", "");
+define("YDing_CORPSECRET", "");
 define("YDing_ChannelSecret","");
-
-//ISV配置
-define("YDing_SUITE_ACCESS_TOKEN", "");//isv 开发套件ACCESSTOKEN
 define("YDing_SSOSecret", "");
-define("YDing_ISV_CORPID", "");
+define("YDing_TOKEN", "");//注册事件回调接口token，任意填写，注意保密
+define("YDing_ENCODING_AES_KEY", "");//注册事件回调接口的数据加密密钥(ENCODING_AES_KEY)，任意填写，注意保密
 
+//SNS网站配置
+define("YDing_SNS_APPID", 		"");
+define("YDing_SNS_APP_SECRET", 	"");
+
+//作为ISV配置
+define("YDing_ISV_CORPID", "");
+define("YDing_ISV_SSOSecret", "");
+define("YDing_ISV_TOKEN", "");//创建套件时填写的token，任意填写，注意保密
+define("YDing_ISV_ENCODING_AES_KEY", "");//创建套件时填写的数据加密密钥(ENCODING_AES_KEY)，任意填写，注意保密
 #
 #
 # 填写结束

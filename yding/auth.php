@@ -15,6 +15,7 @@ include_once 'auth.inc.php';
 		    timeStamp: "<?php echo $timeStamp?>",
 		    nonceStr: "<?php echo $nonceStr?>",
 		    signature: "<?php echo $signature?>",
+            type: <?php echo intval($jsapi_type)?>,
 		    jsApiList: [
 		        'runtime.info',
 		        'device.notification.prompt',

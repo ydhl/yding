@@ -1,5 +1,103 @@
 <?php
+/**
+ * 用户永久授权信息
+ * @author ydhlleeboo
+ *
+ */
+class YDing_Sns_Persistent_Response extends YDingResponse{
+	/**
+	 * 用户在当前开放应用内的唯一标识
+	 * @var unknown
+	 */
+	public $openid;
+	/**
+	 * 用户在当前钉钉开放平台账号范围内的唯一标识，同一个钉钉开放平台账号可以包含多个开放应用，同时也包含ISV的套件应用及企业应用
+	 * @var unknown
+	 */
+	public $unionid;
+	/**
+	 * 用户给开放应用授权的持久授权码，此码目前无过期时间
+	 * @var unknown
+	 */
+	public $persistent_code;
+}
+interface YDing_DingDing_Identifiable{
+	public function getDingDingId();
+}
+/**
+ * 网站扫码登录返回的用户信息
+ * @author ydhlleeboo
+ *
+ */
+class YDing_Sns_User_Response extends YDingResponse implements YDing_DingDing_Identifiable{
+	/**
+	 * 经过处理的手机号（默认不返回）
+	 * @var unknown
+	 */
+	public $maskedMobile;
+	/**
+	 * 用户在钉钉上面的昵称
+	 * @var unknown
+	 */
+	public $nick;
+	/**
+	 * 用户在当前开放应用内的唯一标识
+	 * @var unknown
+	 */
+	public $openid;
+	/**
+	 * 用户在当前开放应用所属的钉钉开放平台账号内的唯一标识
+	 * @var unknown
+	 */
+	public $unionid;
+	/**
+	 * 钉钉Id
+	 * @var unknown
+	 */
+	public $dingId;
+	/**
+	 * 企业数组[
+        {
+            "corp_name": "阿里巴巴",
+            "is_auth": true,
+            "is_manager": false,
+            "rights_level": 100
+        },
+        {
+            "corp_name": "DingTalk",
+            "is_auth": true,
+            "is_manager": false,
+            "rights_level": 200
+        }
+    ]
+	 * @var unknown
+	 */
+	public $corp_info;
+	
+	public function build($msg){
+		parent::build($msg);
+		$this->maskedMobile = $this->user_info["maskedMobile"];
+		$this->nick 		= $this->user_info["nick"];
+		$this->openid 		= $this->user_info["openid"];
+		$this->unionid 		= $this->user_info["unionid"];
+		$this->dingId 		= $this->user_info["dingId"];
+	}
+	public function getDingDingId(){
+		return $this->dingId;
+	}
+}
+
+/**
+ * 免登时返回的基础信息
+ * @author ydhlleeboo
+ *
+ */
 class YDing_Base_User_Response extends YDingResponse{
+	/**
+	 * 	员工在企业内的UserID，注意不是DingDing ID
+	 * @var unknown
+	 */
+	public $userid;
 	/**
 	 * 非管理员用户
 	 * @var integer
@@ -21,11 +119,7 @@ class YDing_Base_User_Response extends YDingResponse{
 	 */
 	const SYS_LEVEL_BOSS = 100;
 	
-	/**
-	 * 	员工在企业内的UserID
-	 * @var unknown
-	 */
-	public $userid;
+
 	
 	/**
 	 * 手机设备号,由钉钉在安装时随机产生
@@ -52,7 +146,7 @@ class YDing_Base_User_Response extends YDingResponse{
  * @author ydhlleeboo
  *
  */
-class YDing_User_Response extends YDing_Base_User_Response{
+class YDing_User_Detail_Response extends YDingResponse implements YDing_DingDing_Identifiable{
 	/**
 	 * 成员名称
 	 * @var unknown
@@ -156,9 +250,18 @@ class YDing_User_Response extends YDing_Base_User_Response{
 // 		$this->isLeaderInDepts = json_encode($this->isLeaderInDepts, true);
 		$this->extattr = json_encode($this->extattr,true);
 	}
+	
+	public function getDingDingId(){
+		return $this->dingId;
+	}
 }
 
-class YDing_ISV_Admin_Response extends YDingResponse{
+/**
+ * 钉钉后台应用免登返回信息
+ * @author ydhlleeboo
+ *
+ */
+class YDing_SSO_User_Response extends YDingResponse{
 	/**
 	 * 公司名字
 	 * @var unknown
@@ -194,6 +297,17 @@ class YDing_ISV_Admin_Response extends YDingResponse{
 	 * @var unknown
 	 */
 	public $userid;
+	
+	public function build($msg){
+		parent::build($msg);
+		
+		$this->corp_name = $this->corp_info["corp_name"];
+		$this->corpid    = $this->corp_info["corpid"];
+		$this->avatar    = $this->user_info["avatar"];
+		$this->email     = $this->user_info["email"];
+		$this->name      = $this->user_info["name"];
+		$this->userid    = $this->user_info["userid"];
+	}
 }
 
 /**

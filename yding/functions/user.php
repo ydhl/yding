@@ -1,4 +1,21 @@
 <?php
+
+/**
+ * 根据unionid获取成员的userid
+ * 
+ * @param unknown $accessToken
+ * @param unknown $unionid 用户在当前钉钉开放平台账号范围内的唯一标识，同一个钉钉开放平台账号可以包含多个开放应用，同时也包含ISV的套件应用及企业应用
+ * @return string
+ */
+function yding_get_userid_by_unionid($accessToken, $unionid){
+	$http = new YDingHttp();
+	$response = $http->get(YDing_OAPI_HOST."user/getUseridByUnionid",
+			array("access_token" => $accessToken, "unionid" => $unionid));
+	$user = json_decode($response);
+	if ($user->userid)return $user->userid;
+	throw new YDing_Exception($user->errmsg, $user->errcode);
+}
+
 /**
  * 免登时，根据code获取用户信息
  * 企业应用的服务器在拿到CODE后，需要将CODE发送到钉钉开放平台接口，
@@ -23,32 +40,32 @@ function yding_get_User_Info($accessToken, $code)
  * @param unknown $accessToken
  * @param string userid 员工在企业内的UserID，企业用来唯一标识用户的字段
  * @throws YDing_Exception
- * @return YDing_User_Response
+ * @return YDing_User_Detail_Response
  */
 function yding_get_user_detail($accessToken, $userid){
 	$http = new YDingHttp();
 	$response = $http->get(YDing_OAPI_HOST."user/get",
 			array("access_token" => $accessToken, "userid" => $userid));
-	$user = new YDing_User_Response($response);
+	$user = new YDing_User_Detail_Response($response);
 	if ($user->isSuccess())return $user;
 	throw new YDing_Exception($user->errmsg, $user->errcode);
 }
 
 /**
- * 通过CODE换取微应用管理员的身份信息
+ * 微应用后台通过CODE换取微应用管理员的身份信息
  * 企业应用的服务器在拿到CODE后，需要将CODE发送到钉钉开放平台接口，
  * 如果验证通过，则返回CODE对应的管理员信息。**此接口只用于微应用后台管理员免登中用来换取管理员信息**
- * @param unknown $accessToken 再次强调，此token不同于一般的accesstoken，需要调用获取微应用管理员免登需要的AccessToken
+ * @param unknown $accessToken 再次强调，此token不同于一般的accesstoken，需要调用获取微应用管理员免登需要的AccessToken（sso token） 
  * @param unknown $code
  * @throws YDing_Exception
- * @return YDing_ISV_Admin_Response
+ * @return YDing_SSO_User_Response
  */
-function yding_get_isv_Admin_Info($accessToken, $code)
+function yding_get_sso_user_Info($accessToken, $code)
 {
 	$http = new YDingHttp();
 	$response = $http->get(YDing_OAPI_HOST."sso/getuserinfo",
 			array("access_token" => $accessToken, "code" => $code));
-	$user = new YDing_ISV_Admin_Response($response);
+	$user = new YDing_SSO_User_Response($response);
 	if ($user->isSuccess())return $user;
 	throw new YDing_Exception($user->errmsg, $user->errcode);
 }
