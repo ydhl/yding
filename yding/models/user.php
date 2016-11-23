@@ -1,5 +1,68 @@
 <?php
 /**
+ * 查询部门用户请求参数
+ * @author ydhlleeboo
+ *
+ */
+class YDing_Get_Department_User_Request extends YDingRequest{
+	/**
+	 * 代表按照进入部门的时间升序
+	 * @var string
+	 */
+	const ORDER_ENTRY_ASC = "entry_asc";
+	/**
+	 * 代表按照进入部门的时间降序
+	 * @var string
+	 */
+	const ORDER_ENTRY_DESC = "entry_desc";
+	/**
+	 * 代表按照部门信息修改时间升序
+	 * @var string
+	 */
+	const ORDER_MODIFIY_ASC = "modify_asc";
+	/**
+	 * 代表按照部门信息修改时间降序
+	 * @var string
+	 */
+	const ORDER_MODIFY_DESC = "modify_desc";
+	/**
+	 * 代表用户定义(未定义时按照拼音)排序
+	 * @var string
+	 */
+	const ORDER_CUSTOM = "custom";
+	
+	/**
+	 * 获取的部门id
+	 * @var unknown
+	 */
+	public $department_id;
+	/**
+	 * 支持分页查询，与size参数同时设置时才生效，此参数代表偏移量
+	 * @var unknown
+	 */
+	public $offset;
+	/**
+	 * 支持分页查询，与offset参数同时设置时才生效，此参数代表分页大小，最大100
+	 * @var unknown
+	 */
+	public $size;
+	/**
+	 * 支持分页查询，部门成员的排序规则，默认不传是按自定义排序；entry_asc代表按照进入部门的时间升序，entry_desc代表按照进入部门的时间降序，modify_asc代表按照部门信息修改时间升序，modify_desc代表按照部门信息修改时间降序，custom代表用户定义(未定义时按照拼音)排序
+	 * @var unknown
+	 */
+	public $order;
+	/**
+	 * 通讯录语言(默认zh_CN另外支持en_US)
+	 * @var unknown
+	 */
+	public $lang = "zh_CN";
+	public $access_token;
+	
+	public function valid(){
+		
+	}
+}
+/**
  * 用户永久授权信息
  * @author ydhlleeboo
  *

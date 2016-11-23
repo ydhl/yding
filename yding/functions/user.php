@@ -111,9 +111,35 @@ function yding_get_department($accessToken, $id)
 	return $depart;
 }
 
-function yding_simple_list($accessToken,$deptId){
-	$response = Http::get("/user/simplelist",
-			array("access_token" => $accessToken,"department_id"=>$deptId));
-	return $response->userlist;
+/**
+ * 获取部门成员,返回简单信息
+ * @param unknown YDing_Get_Department_User_Request
+ * @return {hasMore:bool, userlist:[{userid:'',name:''}]}
+ */
+function yding_get_department_simple_users(YDing_Get_Department_User_Request $request){
+	$http = new YDingHttp();
+	$response = json_decode($http->get(YDing_OAPI_HOST."user/simplelist",$request->toArray()));
+	if ($response->errcode !== 0) throw new YDing_Exception($response->errmsg, $response->errcode);
+	return $response;
 
+}
+/**
+ * 获取部门成员,返回详细信息
+ * @param unknown YDing_Get_Department_User_Request
+ * @return {hasMore:bool, userlist:[YDing_User_Detail_Response, YDing_User_Detail_Response]}
+ */
+function yding_get_department_users(YDing_Get_Department_User_Request $request){
+	$http = new YDingHttp();
+	$response = json_decode($http->Get(YDing_OAPI_HOST."user/list", $request->toArray()));
+	if ($response->errcode !== 0) throw new YDing_Exception($response->errmsg, $response->errcode);
+	$users = array();
+	foreach ($response->userlist as $item){
+		$item->errmsg  = $response->errmsg;
+		$item->errcode = $response->errcode;
+		
+		$user = new YDing_User_Detail_Response(json_encode($item));
+		$users[] = $user;
+	}
+	$response->userlist = $users;
+	return $response;
 }
