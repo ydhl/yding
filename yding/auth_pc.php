@@ -44,6 +44,7 @@ include_once 'auth.inc.php';
 		</script>
 	</head>
 	<body style="margin: 50px;">
+        <span  style="font-size:90px;font-weight: 100;">:)</span>
 		请稍后...
 	</body>
 </html>
