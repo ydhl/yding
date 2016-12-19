@@ -51,6 +51,7 @@ function yding_jsapi_config($agentid, $corpid, $timestamp, $noncestr, $signature
                 'device.notification.confirm',
                 'device.notification.alert',
                 'device.notification.prompt',
+                'biz.util.openLink',
                 'biz.chat.open',
                 'biz.ding.post',
                 'biz.util.open',
@@ -395,6 +396,29 @@ function yding_ding_link_post(uids, corpid, linkTitle, linkUrl, linkImg, linkTex
             yding_jsapi_alert(arg, "链接Ding消息失败", "知道了");
         }
 	});
+}
+<?php 
+}
+
+/**
+ * 打开新连接yding_open_link(link)
+ */
+function yding_open_link(){
+    ?>
+function yding_open_link(link){
+    if( ! ydingIsConfiged){
+        setTimeout(function(){
+            yding_open_link(link);
+        },
+        100);
+        return;
+    }
+    yding.biz.util.openLink({
+        url: link,
+        onSuccess : function(result) {
+        },
+        onFail : function() {}
+    });
 }
 <?php 
 }
