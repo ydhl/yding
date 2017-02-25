@@ -122,26 +122,6 @@ function yding_get_jsapi_ticket($access_token){
 
 
 /**
- * 获取企业服务窗JSAPI鉴权ticket(企业自建或者isv提供都是该接口)，过期时间7200，需要通过ydtimer.yidianhulian.com或者其他定时访问refresh_token.php来定时刷新
- *
- * @param unknown $accessToken 企业服务窗接口访问凭证 即yding_get_channel_isv_token返回的内容，见refresh_token.php文件说明
- * @throws YDing_Exception
- * @return unknown
- */
-function yding_get_channel_jsapi_ticket($accessToken){
-	$http = new YDingHttp ();
-	$response = $http->get ( YDing_OAPI_HOST . 'channel/get_channel_jsapi_ticket', array (
-			'access_token' 		=> $accessToken
-	) );
-
-	$response = json_decode ( $response );
-	if ($response->ticket)
-		return $response->ticket;
-
-		throw new YDing_Exception ( $response->errmsg, $response->errcode );
-}
-
-/**
  * AccessToken是企业自建微应用访问钉钉开放平台接口的全局唯一票据，调用接口时需携带AccessToken。
  * AccessToken需要用CorpID和CorpSecret来换取，不同的CorpSecret会返回不同的AccessToken。正常情况下AccessToken有效期为7200秒，有效期内重复获取返回相同结果，并自动续期。
  * 
@@ -256,47 +236,39 @@ function yding_sign($ticket, $nonceStr, $timeStamp, $url) {
 	return sha1 ( $plain );
 }
 
+
 /**
- * 企业自建(也就是企业自己开发的)服务窗应用时获取服务窗ChannelToken.
- * 
- * 这里的channel token也是一种access token，过期时间7200，需要通过ydtimer.yidianhulian.com或者其他定时访问refresh_token.php来定时刷新
- * 
+ * 微应用后台通过CODE换取微应用管理员的身份信息
+ * 企业应用的服务器在拿到CODE后，需要将CODE发送到钉钉开放平台接口，
+ * 如果验证通过，则返回CODE对应的管理员信息。**此接口只用于微应用后台管理员免登中用来换取管理员信息**
+ * @param unknown $accessToken 再次强调，此token不同于一般的accesstoken，需要调用获取微应用管理员免登需要的AccessToken（sso token）
+ * @param unknown $code
  * @throws YDing_Exception
- * @return string channelToken
+ * @return YDing_SSO_User_Response
  */
-function yding_get_channel_token($corpid = YDing_CORPID, $channel_secret = YDing_ChannelSecret){
-	$http = new YDingHttp ();
-	$response = $http->get ( YDing_OAPI_HOST . 'channel/get_channel_token', array (
-			'corpid' => $corpid,
-			'channel_secret' => $channel_secret
-	) );
-	$response = json_decode ( $response );
-	if ($response->access_token)
-		return $response->access_token;
-		
-	throw new YDing_Exception ( $response->errmsg, $response->errcode );
+function yding_get_sso_user_Info($accessToken, $code)
+{
+    $http = new YDingHttp();
+    $response = $http->get(YDing_OAPI_HOST."sso/getuserinfo",
+            array("access_token" => $accessToken, "code" => $code));
+    $user = new YDing_SSO_User_Response($response);
+    if ($user->isSuccess())return $user;
+    throw new YDing_Exception($user->errmsg, $user->errcode);
 }
 
-/**
- * ISV获取企业服务窗接口调用channel TOKEN
- *
- * 这里的channel token也是一种access token，过期时间7200，需要通过ydtimer.yidianhulian.com或者其他定时访问refresh_token.php来定时刷新
- * @param $auth_corpid 授权方corpid
- * @param $ch_permanent_code 企业服务窗永久授权码
- * @throws YDing_Exception
- * @return string channelToken
- */
-function yding_get_channel_isv_token($auth_corpid, $ch_permanent_code){
-	$suite_access_token = YDingHook::do_hook(YDingHook::GET_SUITE_ACCESS_TOKEN);
-	$http = new YDingHttp ();
-	$response = $http->post ( YDing_OAPI_HOST . 'service/get_channel_corp_token?suite_access_token='.$suite_access_token, json_encode(array (
-			'auth_corpid' 		=> $auth_corpid,
-			'ch_permanent_code'	=> $ch_permanent_code
-	) ));
-	
-	$response = json_decode ( $response );
-	if ($response->access_token)
-		return $response->access_token;
 
-	throw new YDing_Exception ( $response->errmsg, $response->errcode );
+/**
+ * 根据unionid获取成员的userid
+ *
+ * @param unknown $accessToken
+ * @param unknown $unionid 用户在当前钉钉开放平台账号范围内的唯一标识，同一个钉钉开放平台账号可以包含多个开放应用，同时也包含ISV的套件应用及企业应用
+ * @return string
+ */
+function yding_get_userid_by_unionid($accessToken, $unionid){
+    $http = new YDingHttp();
+    $response = $http->get(YDing_OAPI_HOST."user/getUseridByUnionid",
+            array("access_token" => $accessToken, "unionid" => $unionid));
+    $user = json_decode($response);
+    if ($user->userid)return $user->userid;
+    throw new YDing_Exception($user->errmsg, $user->errcode);
 }

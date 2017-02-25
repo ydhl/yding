@@ -46,8 +46,8 @@ try{
 			$func_get_access_token		= function(){
 				return yding_get_channel_token(YDing_CORPID, YDing_ChannelSecret);
 			};
-			$func_get_user_Info			= "yding_get_channel_user_by_code";
-			$func_get_js_ticket			= "yding_get_channel_jsapi_ticket";
+			$func_get_user_Info			= "yding_channel_get_user_by_code";
+			$func_get_js_ticket			= "yding_channel_get_jsapi_ticket";
 			
 			$jsapi_type = 1;
 			break;
@@ -67,7 +67,7 @@ try{
 			$func_get_access_token		= function(){
 				return yding_get_access_token(YDing_CORPID, YDing_CORPSECRET);
 			};
-			$func_get_user_Info			= "yding_get_User_Info";
+			$func_get_user_Info			= "yding_User_get_Info";
 			$func_get_js_ticket			= "yding_get_jsapi_ticket";
 			$jsapi_type = 0;
 	}
@@ -83,9 +83,9 @@ try{
 	if ( @ $_GET["code"]){
 		$userinfo = $func_get_user_Info($access_token, $_GET["code"]);
 		if ($userinfo->userid){
-			$user = yding_get_user_detail($access_token, $userinfo->userid);
+			$user = yding_user_get_detail($access_token, $userinfo->userid);
 		}else{
-			$user = yding_get_user_detail($access_token, yding_get_userid_by_unionid($access_token, $userinfo->unionid));
+			$user = yding_user_get_detail($access_token, yding_get_userid_by_unionid($access_token, $userinfo->unionid));
 		}
 		YDingHook::do_hook(YDingHook::AUTH_SUCCESS, $user);
 		die();

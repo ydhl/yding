@@ -24,7 +24,7 @@ if (YDing_CORPID){
 	
 	//企业自建服务窗时刷新channel token
 	try{
-		$channel_token = yding_get_channel_token(YDing_CORPID, YDing_ChannelSecret);
+		$channel_token = yding_channel_get_token(YDing_CORPID, YDing_ChannelSecret);
 		YDingHook::do_hook(YDingHook::REFRESH_CHANNEL_TOKEN, array(YDing_CORPID, $channel_token));
 	}catch (YDing_Exception $e){
 		YDingHook::do_hook(YDingHook::EXCEPTION, $e);

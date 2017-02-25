@@ -31,7 +31,7 @@ try{
 		YDingHook::do_hook(YDingHook::REFRESH_ACCESS_TOKEN, array(YDing_CORPSECRET, $access_token));
 	}
 // 	var_dump($user);
-	$user = yding_get_user_detail($access_token, $user->userid);
+	$user = yding_user_get_detail($access_token, $user->userid);
 	YDingHook::do_hook(YDingHook::AUTH_SUCCESS, $user);
 }catch (\Exception $e){
 	YDingHook::do_hook(YDingHook::EXCEPTION, $e);

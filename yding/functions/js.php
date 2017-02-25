@@ -12,7 +12,7 @@ function yding_jsapi_init(){
  * 输出PC端dingtalk.js
  * @author leeboo
  */
-function yding_pc_jsapi_init(){
+function yding_jsapi_pc_init(){
 	?>
 <script type="text/javascript" src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
 <?php 
@@ -172,7 +172,7 @@ function yding_jsapi_open_share(url, title, content, image){
 /**
  * 输出yding_navigation_set_title(name)
  */
-function yding_navigation_set_title(){
+function yding_jsapi_navigation_set_title(){
 ?>
 function yding_navigation_set_title(title){
     if( ! ydingIsConfiged){
@@ -204,7 +204,7 @@ function yding_navigation_set_title(title){
  * onclick：方法名或者匿名方法，当inControl为true时，点击按钮后会调用该方法
  * 
  */
-function yding_navigation_set_left(){
+function yding_jsapi_navigation_set_left(){
 	?>
 function yding_navigation_set_left(show, inControl, showIcon, text, onclick){
     if( ! ydingIsConfiged){
@@ -241,7 +241,7 @@ function yding_navigation_set_left(show, inControl, showIcon, text, onclick){
  * onclick：方法名或者匿名方法，当inControl为true时，点击按钮后会调用该方法
  *
  */
-function yding_navigation_set_right(){
+function yding_jsapi_navigation_set_right(){
 	?>
 function yding_navigation_set_right(show, inControl, text, onclick){
     if( ! ydingIsConfiged){
@@ -285,7 +285,7 @@ function yding_navigation_set_right(show, inControl, text, onclick){
 	     ...
 	    ]
  */
-function yding_contact_choose(){
+function yding_jsapi_contact_choose(){
 ?>
 function yding_contact_choose(corpId, departmentid, multiple, max, users, callback){
     if( ! ydingIsConfiged){
@@ -326,7 +326,7 @@ function yding_contact_choose(corpId, departmentid, multiple, max, users, callba
  * alertDate:钉提醒时间 格式yyyy-MM-dd HH:mm
  * yding_ding_image_post(uids, corpid, type, text, alertType, alertDate)
  */
-function yding_ding_image_post(){
+function yding_jsapi_ding_image_post(){
 	?>
 function yding_ding_image_post(uids, corpid, imgs, text, alertType, alertDate){
     if( ! ydingIsConfiged){
@@ -366,7 +366,7 @@ function yding_ding_image_post(uids, corpid, imgs, text, alertType, alertDate){
  * alertDate:钉提醒时间 格式yyyy-MM-dd HH:mm
  * yding_ding_image_post(uids, corpid, type, text, alertType, alertDate)
  */
-function yding_ding_link_post(){
+function yding_jsapi_ding_link_post(){
 	?>
 function yding_ding_link_post(uids, corpid, linkTitle, linkUrl, linkImg, linkText, text, alertType, alertDate){
     if( ! ydingIsConfiged){
@@ -403,7 +403,7 @@ function yding_ding_link_post(uids, corpid, linkTitle, linkUrl, linkImg, linkTex
 /**
  * 打开新连接yding_open_link(link)
  */
-function yding_open_link(){
+function yding_jsapi_open_link(){
     ?>
 function yding_open_link(link){
     if( ! ydingIsConfiged){
