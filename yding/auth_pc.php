@@ -6,7 +6,7 @@ include_once 'auth.inc.php';
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>登录中...</title>
-		<?php yding_pc_jsapi_init();?>
+		<?php yding_jsapi_pc_init();?>
 		<script type="text/javascript">
 		DingTalkPC.config({
 			agentId: <?php echo $_GET["agentid"]?>,
